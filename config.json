@@ -1,0 +1,31 @@
+{
+     "app": {
+          "token": "Your_token",
+          "global": true,
+          "guild": [
+               "Your guild ID"
+          ],
+          "ExtraMessages": false,
+          "loopMessage": false
+     },
+     "opt": {
+          "DJ": {
+               "enabled": false,
+               "roleName": "",
+               "commands": []
+          },
+          "maxVol": 100,
+          "spotifyBridge": false,
+          "volume": 75,
+          "leaveOnEmpty": false,
+          "leaveOnEmptyCooldown": 30000,
+          "leaveOnEnd": false,
+          "leaveOnEndCooldown": false,
+          "discordPlayer": {
+               "ytdlOptions": {
+                    "quality": "highestaudio",
+                    "highWaterMark": 33554432
+               }
+          }
+     }
+}
