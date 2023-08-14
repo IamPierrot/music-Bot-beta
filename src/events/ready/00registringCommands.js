@@ -1,6 +1,8 @@
 const areCommandsDifferent = require('../../utils/areCommandsDifferent.js');
 const getApplicationCommands = require('../../utils/getApplicationCommands.js');
 const getLocalCommands = require('../../utils/getLocalCommands.js');
+const { REST, Routes } = require('discord.js');
+
 
 module.exports = async (client) => {
      try {
@@ -10,7 +12,7 @@ module.exports = async (client) => {
                const applicationCommands = await getApplicationCommands(
                     client,
                     guildId
-               );               
+               );
                console.log(`Begin registring Command at ${guildId}`)
 
                for (const localCommand of localCommands) {
@@ -50,9 +52,17 @@ module.exports = async (client) => {
                               options,
                          });
                          console.log(`👍 Registered command "${name}."`);
+
                     }
+
                }
           }
+          const rest = new REST().setToken(configure.app.token);
+          rest.put(Routes.applicationCommands(configure.app.client), { body: localCommands })
+               .then(() => console.log('Registering global commands for this bot'))
+               .catch(console.error);
+
+     
      } catch (error) {
           console.log(`There was an error: ${error}`);
      }

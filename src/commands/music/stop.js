@@ -3,7 +3,7 @@ const { useQueue, useMainPlayer } = require('discord-player');
 
 module.exports = {
      name: 'stop',
-     description: 'stop the player!',
+     description: 'cho em cook khỏi voice',
      deleted: false,
      voiceChannel: true,
 

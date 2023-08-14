@@ -2,23 +2,18 @@ const getLocalCommands = require('../../utils/getLocalCommands.js');
 const { InteractionType, EmbedBuilder } = require('discord.js')
 const { useQueue } = require('discord-player');
 
+/**
+ * 
+ * @param {*} client 
+ * @param {import('discord.js').ChatInputCommandInteraction} interaction 
+ * @returns 
+ */
+
 module.exports = async (client, interaction) => {
      try {
+          if (!interaction.isChatInputCommand()) return;
           await interaction.deferReply();
 
-          if (interaction.type === InteractionType.MessageComponent) {
-               const customId = JSON.parse(interaction.customId);
-               const buttonName = customId.ffb;
-               const queue = useQueue(interaction.guild);
-
-               if (buttonName) {
-                    delete require.cache[require.resolve(`../../buttons/${buttonName}.js`)];
-                    const button = require(`../../buttons/${buttonName}.js`);
-                    if (button) await button({ client, interaction, customId, queue });
-               }
-          } else if (!interaction.isChatInputCommand()) return;
-          
-          
           const localCommands = getLocalCommands();
 
           const commandObject = await localCommands.find(
@@ -61,7 +56,6 @@ module.exports = async (client, interaction) => {
                     }
                }
           }
-
           await commandObject.callback(client, interaction);
      } catch (error) {
           console.log(`There was an error running command: ${error} `);

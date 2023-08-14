@@ -1,8 +1,10 @@
-# Music Bot (beta) v0.1.1
+# Music Bot (beta) v0.1.2
   + This is the updates of music Bot released before.
   + In the future, there will be some update to fix bugs and new Update
-## Update
-  + New method in Skip and Stop events : People who don't use Play before are not able to use these command.
-  + Update new Embed for Ping command.
+## BIG UPDATE
+  + New commands : menu and history.
+  + New Componets Event: Lyrics, history, resume&pause.
+  + Fixed Major Bug in loop.
+  + Update new method when registering commands
 
 Good luck and Have Fun 🧀🥖🧀🧀

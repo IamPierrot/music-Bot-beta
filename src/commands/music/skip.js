@@ -4,7 +4,7 @@ const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
      name: 'skip',
-     description: 'skip the queue',
+     description: 'bỏ qua bài em đang hát',
      deleted: false,
      voiceChannel: true,
 

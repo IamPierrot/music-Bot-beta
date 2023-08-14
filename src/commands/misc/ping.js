@@ -2,7 +2,7 @@ const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
      name: 'ping',
-     description: 'pong!',
+     description: 'pong! vào cái đầu của anhzai',
      /**
       * 
       * @param {import('discord.js').Client} client 

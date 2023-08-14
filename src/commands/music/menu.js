@@ -1,30 +1,36 @@
-const { ActionRowBuilder, ButtonBuilder, EmbedBuilder } = require('discord.js');
+const { useQueue } = require("discord-player");
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require('discord.js');
 
-/**
- * 
- * @param {import('discord-player').GuildQueue} queue
- * @param {import('discord-player').Track} track 
- * @returns 
- */
+module.exports = {
+     name: 'menu',
+     description: 'hiện lại Menu điều khiển nhạc',
+     voiceChannel: true,
 
-module.exports = (queue, track) => {
-     try {
-          if (!configure.app.loopMessage && queue.repeatMode !== 0) return;
+     callback: async (client, interaction) => {
+          const queue = useQueue(interaction.guild);
+          const track = queue.currentTrack;
+
+
+          const noMusic = new EmbedBuilder()
+               .setAuthor({ name: 'Không có gì đang phát ấy ? thử lại ikkk.... ❌' })
+
+          if (!queue && !queue.isPlaying()) await interaction.editReply({ embeds: [noMusic] });
 
           const controlEmbed = new EmbedBuilder()
                .setAuthor({ name: `MENU ĐIỀU KHIỂN`, iconURL: track.requestedBy.avatarURL() })
                .setColor('#4d1aff')
                .setDescription(`
-                         :notes:  **${track.toHyperlink()}** \n \
-                         \n \
-                         :musical_keyboard: **Tác giả**: \`${track.author}\` \n \
-                         :hourglass: **Thời lượng**: \`${track.duration}\` \n \
-                         \n \
-                         :small_blue_diamond: Được thêm vào bởi ${track.requestedBy.toString()}
-                         `)
+                    :notes:  **${track.toHyperlink()}** \n \
+                    \n \
+                    :musical_keyboard: **Tác giả**: \`${track.author}\` \n \
+                    :hourglass: **Thời lượng**: \`${track.duration}\` \n \
+                    \n \
+                    :small_blue_diamond: Được thêm vào bởi ${track.requestedBy.toString()}
+                    `)
                .setTimestamp()
                .setFooter({ text: 'Âm nhạc đi trước - Tình yêu theo sau ❤' })
 
+          ////////////////////////// BUTTON ROW 1
           const back = new ButtonBuilder()
                .setLabel('Back')
                .setCustomId(JSON.stringify({ ffb: 'back' }))
@@ -50,6 +56,8 @@ module.exports = (queue, track) => {
                .setCustomId(JSON.stringify({ ffb: 'queueTracks' }))
                .setStyle('Secondary')
 
+
+          ///////////////////////// BUTTON ROW 2
           const history = new ButtonBuilder()
                .setLabel('History')
                .setCustomId(JSON.stringify({ ffb: 'history' }))
@@ -60,18 +68,14 @@ module.exports = (queue, track) => {
                .setStyle('Danger')
           const lyrics = new ButtonBuilder()
                .setLabel('Lyrics')
-               .setCustomId(JSON.stringify({ ffb: 'lyrics'}))
+               .setCustomId(JSON.stringify({ ffb: 'lyrics' }))
                .setStyle('Secondary')
 
           const row1 = new ActionRowBuilder().addComponents(back, loop, stop, queueTracks, skip);
           const row2 = new ActionRowBuilder().addComponents(history, lyrics, resumePause);
 
-          queue.metadata.send({ embeds: [controlEmbed], components: [row1, row2] })
-               .then((message) => setTimeout(() => message.delete(), track.durationMS));
+          await interaction.editReply({ embeds: [controlEmbed], components: [row1, row2] })
+               .then(() => setTimeout(() => interaction.deleteReply()), 100000)
 
-
-     } catch (error) {
-          console.log(error);
      }
-
 }

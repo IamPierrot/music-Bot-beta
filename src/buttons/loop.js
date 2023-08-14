@@ -33,7 +33,7 @@ module.exports = async ({ interaction, queue }) => {
           }
 
           const loopEmbed = new EmbedBuilder()
-               .setDescription(`Vòng lặp đã được thiết lập : **${methods[repeatMode]}** ✅`)
+               .setDescription(`Thiết lập chế độ : **${methods[repeatMode]}** ✅`)
 
           await interaction.editReply({ embeds: [loopEmbed] });
      }

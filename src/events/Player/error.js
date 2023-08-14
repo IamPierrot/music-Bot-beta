@@ -7,7 +7,7 @@ module.exports = (queue, error) => {
         .setColor('#EE4B2B')
         .setTimestamp()
 
-    queue.metadata.send({ embeds: [ErrorEmbed] , ephemeral: true})
+    queue.metadata.send({ embeds: [ErrorEmbed] , ephemeral: true}).then((msg) => msg.delete());
 
     console.log(`Error emitted from the Bot ${error.message}`);
 }

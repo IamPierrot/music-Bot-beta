@@ -3,13 +3,12 @@ const { ApplicationCommandOptionType, EmbedBuilder } = require('discord.js');
 
 module.exports = {
      name: 'play',
-     description: "play a song!",
-     deleted: false,
+     description: "bắt đầu 1 bài hát",
      voiceChannel: true,
      options: [
           {
                name: 'song',
-               description: 'the song you want to play',
+               description: 'bài nhạc mà anh muốn yêu cầu em hát',
                type: ApplicationCommandOptionType.String,
                required: true,
           }
@@ -67,7 +66,7 @@ module.exports = {
                :small_blue_diamond: Nguồn tìm kiếm : ${track.queryType}
                `)
                .setTimestamp()
-               .setFooter({ text: 'Âm nhạc đi trước - Tình yêu theo sau ❤' })
+               .setFooter({ text: 'Âm nhạc đi trước - Tình yêu theo sau ❤️' })
 
 
           await interaction.editReply({ embeds: [playEmbed] });

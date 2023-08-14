@@ -1,8 +1,9 @@
 const { EmbedBuilder } = require('discord.js');
 module.exports = async ({ client, interaction, queue }) => {
-    if (!queue || !queue.isPlaying()) return interaction.editReply({ content: `No music currently playing... try again ? ❌`, ephemeral: true });
+    if (!queue || !queue.isPlaying()) return interaction.editReply({ content: `Mình đang không hát bài nào mà? ❌`, ephemeral: true });
 
-    const methods = ['🔁', '🔂',''];
+    const methods = ['','🔁', '🔂'];
+    console.log(queue.repeatMode);
 
     const songs = queue.tracks.toArray().length;
 
