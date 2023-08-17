@@ -1,7 +1,5 @@
 const getLocalCommands = require('../../utils/getLocalCommands.js');
-const { InteractionType, EmbedBuilder } = require('discord.js')
-const { useQueue } = require('discord-player');
-
+const { EmbedBuilder } = require('discord.js');
 /**
  * 
  * @param {*} client 
@@ -12,7 +10,6 @@ const { useQueue } = require('discord-player');
 module.exports = async (client, interaction) => {
      try {
           if (!interaction.isChatInputCommand()) return;
-          await interaction.deferReply();
 
           const localCommands = getLocalCommands();
 
@@ -23,21 +20,21 @@ module.exports = async (client, interaction) => {
           if (!commandObject) return;
 
           if (commandObject.voiceChannel) {
-               if (!interaction.member.voice.channel) return interaction.editReply({ embeds: [new EmbedBuilder().setColor('#ff0000').setDescription(`❌ | Bạn đang không ở trong phòng Voice`)], ephemeral: true, })
-               if (interaction.guild.members.me.voice.channel && interaction.member.voice.channel.id !== interaction.guild.members.me.voice.channel.id) return interaction.editReply({ embeds: [new EmbedBuilder().setColor('#ff0000').setDescription(`❌ | Bạn đang không ở cùng phòng voice với tui! `)], ephemeral: true, })
+               if (!interaction.member.voice.channel) return await interaction.reply({ embeds: [new EmbedBuilder().setColor('#ff0000').setDescription(`❌ | Bạn đang không ở trong phòng Voice`)], ephemeral: true, })
+               if (interaction.guild.members.me.voice.channel && interaction.member.voice.channel.id !== interaction.guild.members.me.voice.channel.id) return await interaction.reply({ embeds: [new EmbedBuilder().setColor('#ff0000').setDescription(`❌ | Bạn đang không ở cùng phòng voice với tui! `)], ephemeral: true, })
           }
 
           if (commandObject.permissionsRequired?.length) {
                for (const permission of commandObject.permissionsRequired) {
                     if (!interaction.member.permissions.has(permission)) {
-                         interaction.editReply({
+                         interaction.reply({
                               content: 'Not enough permissions.',
                               ephemeral: true,
                          });
                          return;
                     }
                     else {
-                         interaction.editReply({ content: 'okey u have permissions', ephemeral: true });
+                         interaction.reply({ content: 'okey u have permissions', ephemeral: true });
                          return;
                     }
                }
@@ -48,7 +45,7 @@ module.exports = async (client, interaction) => {
                     const bot = interaction.guild.members.me;
 
                     if (!bot.permissions.has(permission)) {
-                         interaction.editReply({
+                         interaction.reply({
                               content: "I don't have enough permissions.",
                               ephemeral: true,
                          });

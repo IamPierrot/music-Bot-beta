@@ -2,14 +2,14 @@ const { QueryType, useMainPlayer } = require('discord-player');
 const { ApplicationCommandOptionType, EmbedBuilder } = require('discord.js');
 
 module.exports = {
-     name: 'play',
-     description: "bắt đầu 1 bài hát",
+     name: 'playlist',
+     description: "Thêm vào 1 playlist bài hát trên youtube",
      voiceChannel: true,
 
      options: [
           {
-               name: 'song',
-               description: 'bài nhạc mà anh muốn yêu cầu em hát',
+               name: 'playlist',
+               description: 'playlist mà anh muốn em hát',
                type: ApplicationCommandOptionType.String,
                required: true,
           }
@@ -23,15 +23,14 @@ module.exports = {
 
      callback: async (client, interaction) => {
           const player = useMainPlayer();
-          const song = interaction.options.getString('song');
-          const res = await player.search(song, {
+          const playlist = interaction.options.getString('playlist');
+          const res = await player.search(playlist, {
                requestedBy: interaction.member,
-               searchEngine: QueryType.YOUTUBE
+               searchEngine: QueryType.YOUTUBE_PLAYLIST
           });
 
           const NoResultsEmbed = new EmbedBuilder()
-               .setAuthor({ name: `Không tìm thấy bài hát mà bạn muốn tìm.... thử lại? ❌` })
-               .setDescription(`Nếu đó là link của playlist Youtube hãy dùng lệnh /playlist`)
+               .setAuthor({ name: `Không tìm thấy playlist mà bạn muốn phát.... thử lại? ❌` })
                .setColor('#2f3136')
 
           if (!res || !res.tracks.length) return await interaction.reply({ embeds: [NoResultsEmbed] });
@@ -58,19 +57,11 @@ module.exports = {
                await interaction.reply({ embeds: [NoVoiceEmbed] });
           }
           const track = res.tracks[0]; //Track
-          
-          
-          res.playlist ? await interaction.reply() : queue.addTrack(track);
-          
-          if (!queue.isPlaying()) {
-               await queue.node.play();
-          }
-
           const playEmbed = new EmbedBuilder()
                .setAuthor({ name: `🎧 ĐÃ THÊM VÀO HÀNG PHÁT`, iconURL: interaction.user.avatarURL() })
                .setColor('#4d1aff')
                .setDescription(`
-               :notes:  **${track.toHyperlink()}** \n \
+               :notes:  **[Đã thêm thành công playlist](${playlist})** \n \
                \n \
                :small_blue_diamond: Được thêm vào bởi : ${track.requestedBy.toString()} 
                :small_blue_diamond: Nguồn tìm kiếm : ${track.queryType}
@@ -80,5 +71,12 @@ module.exports = {
           
           
           await interaction.reply({ embeds: [playEmbed] });
+          
+          res.playlist ? queue.addTrack(res.tracks) : queue.addTrack(track);
+          
+          if (!queue.isPlaying()) {
+               await queue.node.play();
+          }
+
      },
 };

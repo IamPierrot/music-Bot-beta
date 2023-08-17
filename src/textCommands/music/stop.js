@@ -4,24 +4,22 @@ const { useQueue } = require('discord-player');
 module.exports = {
      name: 'stop',
      description: 'cho em cook khỏi voice',
-     deleted: false,
      voiceChannel: true,
 
-     callback: async (client, interaction) => {
-          const queue = useQueue(interaction.guild);
-          
+     callback: async (client, message, args) => {
           const noMusic = new EmbedBuilder()
                .setAuthor({ name: 'Không có gì đang phát ấy ? thử lại ikkk.... ❌' })
+          const queue = useQueue(message.guild);
 
-          if (!queue || !queue.isPlaying()) return await interaction.reply({ embeds: [noMusic], ephemeral: true });
-
+          if (!queue || !queue.isPlaying()) return await message.reply({ embeds: [noMusic] });
           queue.delete();
 
           const stopEmbed = new EmbedBuilder()
                .setColor('#b72563')
-               .setAuthor({ name: 'Nhà ngươi đã cho ta ngừng hát 🤬', iconURL: interaction.user.avatarURL() })
+               .setAuthor({ name: 'Nhà ngươi đã cho ta ngừng hát 🤬', iconURL: message.author.displayAvatarURL() })
 
-          await interaction.reply({ embeds: [stopEmbed] });
+
+          await message.reply({ embeds: [stopEmbed] });
 
      },
 }

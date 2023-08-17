@@ -1,43 +1,35 @@
-const { QueryType, useMainPlayer } = require('discord-player');
-const { ApplicationCommandOptionType, EmbedBuilder } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
+const { useMainPlayer, QueryType } = require('discord-player');
+
 
 module.exports = {
      name: 'play',
-     description: "bắt đầu 1 bài hát",
+     description: 'bắt đầu 1 bài hát',
      voiceChannel: true,
-
-     options: [
-          {
-               name: 'song',
-               description: 'bài nhạc mà anh muốn yêu cầu em hát',
-               type: ApplicationCommandOptionType.String,
-               required: true,
-          }
-     ],
      /**
-      * @param {import('discord.js').Client} client 
-      * @param {import('discord.js').ChatInputCommandInteraction} interaction
-      * @param {import('discord-player').GuildQueue} queue
-      * @param {import('discord-player').Track} track
+      * 
+      * @param {*} client 
+      * @param {import('discord.js').Message} message 
+      * @param {*} args 
+      * @returns 
       */
-
-     callback: async (client, interaction) => {
+     callback: async (client, message, args) => {
           const player = useMainPlayer();
-          const song = interaction.options.getString('song');
+
+          const song = args.join(' ');
           const res = await player.search(song, {
-               requestedBy: interaction.member,
+               requestedBy: message.member,
                searchEngine: QueryType.YOUTUBE
           });
-
           const NoResultsEmbed = new EmbedBuilder()
                .setAuthor({ name: `Không tìm thấy bài hát mà bạn muốn tìm.... thử lại? ❌` })
                .setDescription(`Nếu đó là link của playlist Youtube hãy dùng lệnh /playlist`)
                .setColor('#2f3136')
 
-          if (!res || !res.tracks.length) return await interaction.reply({ embeds: [NoResultsEmbed] });
+          if (!res || !res.tracks.length) return await message.reply({ embeds: [NoResultsEmbed] });
 
-          const queue = player.nodes.create(interaction.guild, { //guildQueue
-               metadata: interaction.channel,
+          const queue = player.nodes.create(message.guild, { //guildQueue
+               metadata: message.channel,
                spotifyBridge: configure.opt.spotifyBridge,
                volume: configure.opt.volume,
                leaveOnEmpty: configure.opt.leaveOnEmpty,
@@ -47,27 +39,20 @@ module.exports = {
           });
 
           try {
-               if (!queue.connection) await queue.connect(interaction.member.voice.channel);
+               if (!queue.connection) await queue.connect(message.member.voice.channel);
           } catch {
-               await player.deleteQueue(interaction.guildId);
+               await player.deleteQueue(message.guildId);
 
                const NoVoiceEmbed = new EmbedBuilder()
                     .setAuthor({ name: `Mình không thể kết nối được với voice channel.... thử lại ? ❌` })
                     .setColor('0xFF0000')
 
-               await interaction.reply({ embeds: [NoVoiceEmbed] });
+               await message.reply({ embeds: [NoVoiceEmbed] });
           }
           const track = res.tracks[0]; //Track
-          
-          
-          res.playlist ? await interaction.reply() : queue.addTrack(track);
-          
-          if (!queue.isPlaying()) {
-               await queue.node.play();
-          }
 
           const playEmbed = new EmbedBuilder()
-               .setAuthor({ name: `🎧 ĐÃ THÊM VÀO HÀNG PHÁT`, iconURL: interaction.user.avatarURL() })
+               .setAuthor({ name: `🎧 ĐÃ THÊM VÀO HÀNG PHÁT`, iconURL: track.requestedBy.avatarURL()})
                .setColor('#4d1aff')
                .setDescription(`
                :notes:  **${track.toHyperlink()}** \n \
@@ -77,8 +62,14 @@ module.exports = {
                `)
                .setTimestamp()
                .setFooter({ text: 'Âm nhạc đi trước - Tình yêu theo sau ❤️' })
-          
-          
-          await interaction.reply({ embeds: [playEmbed] });
-     },
-};
+
+
+          await message.reply({ embeds: [playEmbed] });
+
+          queue.addTrack(track);
+
+          if (!queue.isPlaying()) {
+               await queue.node.play();
+          }
+     }
+}

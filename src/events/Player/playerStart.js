@@ -17,8 +17,8 @@ module.exports = (queue, track) => {
                .setDescription(`
                          :notes:  **${track.toHyperlink()}** \n \
                          \n \
-                         :musical_keyboard: **Tác giả**: \`${track.author}\` \n \
-                         :hourglass: **Thời lượng**: \`${track.duration}\` \n \
+                         :musical_keyboard: **Tác giả :** \`${track.author}\` \n \
+                         :hourglass: **Thời lượng :** \`${track.duration}\` \n \
                          \n \
                          :small_blue_diamond: Được thêm vào bởi ${track.requestedBy.toString()}
                          `)
@@ -61,13 +61,22 @@ module.exports = (queue, track) => {
           const lyrics = new ButtonBuilder()
                .setLabel('Lyrics')
                .setCustomId(JSON.stringify({ ffb: 'lyrics'}))
+               .setStyle('Primary')
+          const volumeUp = new ButtonBuilder()
+               .setLabel('Volume Up')
+               .setCustomId(JSON.stringify({ ffb: 'volumeup'}))
+               .setStyle('Secondary')
+          const volumeDown = new ButtonBuilder()
+               .setLabel('Volume Down')
+               .setCustomId(JSON.stringify({ ffb: 'volumedown'}))
                .setStyle('Secondary')
 
-          const row1 = new ActionRowBuilder().addComponents(back, loop, stop, queueTracks, skip);
-          const row2 = new ActionRowBuilder().addComponents(history, lyrics, resumePause);
+          const row2 = new ActionRowBuilder().addComponents(back, volumeDown, stop, volumeUp, skip);
+          const row1 = new ActionRowBuilder().addComponents(history, loop , resumePause, queueTracks , lyrics);
 
-          queue.metadata.send({ embeds: [controlEmbed], components: [row1, row2] })
-               .then((message) => setTimeout(() => message.delete(), track.durationMS));
+          
+          queue.metadata.send({ embeds: [controlEmbed], components: [row1, row2] }) // đó có chạy :v//
+               .then((message) => setTimeout(() => message.delete(), track.durationMS));// hmmm
 
 
      } catch (error) {
