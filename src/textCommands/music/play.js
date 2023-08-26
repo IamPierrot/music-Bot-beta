@@ -50,6 +50,11 @@ module.exports = {
                await message.reply({ embeds: [NoVoiceEmbed] });
           }
           const track = res.tracks[0]; //Track
+          queue.addTrack(track);
+
+          if (!queue.isPlaying()) {
+               await queue.node.play();
+          }
 
           const playEmbed = new EmbedBuilder()
                .setAuthor({ name: `🎧 ĐÃ THÊM VÀO HÀNG PHÁT`, iconURL: track.requestedBy.avatarURL()})
@@ -66,10 +71,5 @@ module.exports = {
 
           await message.reply({ embeds: [playEmbed] });
 
-          queue.addTrack(track);
-
-          if (!queue.isPlaying()) {
-               await queue.node.play();
-          }
      }
 }

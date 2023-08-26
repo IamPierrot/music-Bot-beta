@@ -1,18 +1,19 @@
 {
      "app": {
-          "token": "Your_token",
+          "token": "Your token",
           "global": true,
-          "guild": [
-               "Your guild ID"
-          ],
+          "guild": "Your guild id (Optional)",
           "ExtraMessages": false,
-          "loopMessage": false
+          "loopMessage": false,
+          "client": "Your client id"
      },
      "opt": {
+          "idDev": [
+               "Ids of dev"
+          ],
           "DJ": {
-               "enabled": false,
-               "roleName": "",
-               "commands": []
+               "enable": true,
+               "roleName": "The name of role"
           },
           "maxVol": 100,
           "spotifyBridge": false,

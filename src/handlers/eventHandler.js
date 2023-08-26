@@ -1,5 +1,6 @@
 const path = require('path');
 const getAllFiles = require('../utils/getAllFiles.js');
+let event = [];
 
 module.exports = (client) => {
      const eventFolders = getAllFiles(path.join(__dirname, '..', 'events'), true);
@@ -9,15 +10,15 @@ module.exports = (client) => {
           eventFiles.sort((a, b) => a > b);
 
           const eventName = eventFolder.replace(/\\/g, '/').split('/').pop();
-          
           if (eventName === "Player") continue;
-
-          client.on(eventName, async (arg) => {
+          event.push(eventName);
+          client.on(eventName, async (arg, arg2) => {
                for (const eventFile of eventFiles) {
-                    const eventFunction = require(eventFile);
-                    await eventFunction(client, arg);
                     delete require.cache[require.resolve(eventFile)];
+                    const eventFunction = require(eventFile);
+                    await eventFunction(client, arg, arg2);
                }
           });
      }
+     console.table(event);
 };

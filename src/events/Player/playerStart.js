@@ -75,8 +75,8 @@ module.exports = (queue, track) => {
           const row1 = new ActionRowBuilder().addComponents(history, loop , resumePause, queueTracks , lyrics);
 
           
-          queue.metadata.send({ embeds: [controlEmbed], components: [row1, row2] }) // đó có chạy :v//
-               .then((message) => setTimeout(() => message.delete(), track.durationMS));// hmmm
+          queue.metadata.send({ embeds: [controlEmbed], components: [row1, row2] })
+               .then((message) => setTimeout(() => message.delete(), track.durationMS));
 
 
      } catch (error) {

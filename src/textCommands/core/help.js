@@ -10,7 +10,7 @@ module.exports = {
 
      callback: async (client, message, args) => {
           const commands = getLocalCommands().filter(x => x.showHelp !== false && x.deleted !== true);
-          const text = getTextCommands().filter(x => x.showHelp !== false && x.deleted !== true );
+          const text = getTextCommands().filter(x => x.showHelp !== false && x.deleted !== true);
 
 
           const embed = new EmbedBuilder()
